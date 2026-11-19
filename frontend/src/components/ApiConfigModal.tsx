@@ -32,11 +32,24 @@ export const ApiConfigModal: React.FC<ApiConfigModalProps> = ({
   if (!isOpen) return null;
 
   const handleTestAndSave = async () => {
-    const cleanUrl = apiUrl.trim().replace(/\/$/, "");
+    let cleanUrl = apiUrl.trim().replace(/\/$/, "");
     if (!cleanUrl) {
       setTestResult({ success: false, message: "Please provide a valid backend URL." });
       return;
     }
+
+    // Auto-complete scheme and Render domain if user entered just the service name
+    if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
+      if (cleanUrl.includes("render.com") || cleanUrl.includes("trycloudflare.com")) {
+        cleanUrl = `https://${cleanUrl}`;
+      } else if (!cleanUrl.includes(".")) {
+        // e.g. user typed "truthlens-api-nflc"
+        cleanUrl = `https://${cleanUrl}.onrender.com`;
+      } else {
+        cleanUrl = `https://${cleanUrl}`;
+      }
+    }
+    setApiUrl(cleanUrl);
 
     setIsTesting(true);
     setTestResult(null);
