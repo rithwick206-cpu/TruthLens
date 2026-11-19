@@ -12,12 +12,31 @@ export function getApiBase(): string {
   if (typeof window !== "undefined") {
     const override = localStorage.getItem("truthlens_api_url");
     if (override && override.trim()) {
-      return override.trim().replace(/\/$/, "");
+      let clean = override.trim().replace(/\/$/, "");
+      if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+        clean = `https://${clean}`;
+      }
+      return clean;
     }
   }
-  return (
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000"
-  ).replace(/\/$/, "");
+
+  const rawEnv = (process.env.NEXT_PUBLIC_API_BASE_URL || "").trim().replace(/\/$/, "");
+  if (rawEnv) {
+    if (!rawEnv.startsWith("http://") && !rawEnv.startsWith("https://")) {
+      return `https://${rawEnv}`;
+    }
+    return rawEnv;
+  }
+
+  // When deployed on cloud (e.g. Render, Vercel), use same-origin Next.js rewrites proxy by default
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host !== "localhost" && host !== "127.0.0.1") {
+      return "";
+    }
+  }
+
+  return "http://127.0.0.1:8000";
 }
 
 export function setApiBase(url: string): void {

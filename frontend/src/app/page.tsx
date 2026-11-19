@@ -8,7 +8,7 @@ import { IngestWorkspace } from "@/components/IngestWorkspace";
 import { ForensicWorkbench } from "@/components/workbench/ForensicWorkbench";
 import { ModelInsightsModal } from "@/components/ModelInsightsModal";
 import { CaseRecord, ForensicReport } from "@/types/forensics";
-import { listCases, getCase, loadDemoSample, getReportPdfUrl } from "@/lib/api";
+import { listCases, getCase, loadDemoSample, getReportPdfUrl, getApiBase } from "@/lib/api";
 import { FolderArchive, PlusCircle, AlertCircle } from "lucide-react";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ToastProvider } from "@/components/Toast";
@@ -73,8 +73,9 @@ export default function Home() {
       return data;
     } catch (err: any) {
       console.error("Failed to load cases from backend:", err);
+      const target = getApiBase() || "backend service";
       setGlobalError(
-        "Could not connect to TruthLens backend at http://127.0.0.1:8000. Ensure FastAPI is running."
+        `Could not connect to TruthLens backend at ${target}. Ensure FastAPI is running.`
       );
       return [];
     } finally {

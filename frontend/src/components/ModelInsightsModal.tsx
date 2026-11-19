@@ -20,7 +20,7 @@ import {
   Sparkles,
   Info,
 } from "lucide-react";
-import { getModelMetrics } from "@/lib/api";
+import { getModelMetrics, getApiBase } from "@/lib/api";
 import { ModelMetrics } from "@/types/forensics";
 
 export const ModelInsightsModal: React.FC = () => {
@@ -39,7 +39,8 @@ export const ModelInsightsModal: React.FC = () => {
       })
       .catch((err) => {
         console.error("Failed to load model metrics:", err);
-        setError("Could not connect to FastAPI /api/metrics/model. Verify backend is running on :8000.");
+        const endpoint = getApiBase() || "backend";
+        setError(`Could not connect to FastAPI /api/metrics/model (${endpoint}). Verify backend service.`);
       })
       .finally(() => setLoading(false));
   };

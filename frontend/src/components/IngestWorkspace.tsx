@@ -14,7 +14,7 @@ import {
   ShieldAlert,
   Info,
 } from "lucide-react";
-import { ingestCase, analyzeCase } from "@/lib/api";
+import { ingestCase, analyzeCase, getApiBase } from "@/lib/api";
 import { ForensicReport } from "@/types/forensics";
 
 interface IngestWorkspaceProps {
@@ -148,8 +148,9 @@ export const IngestWorkspace: React.FC<IngestWorkspaceProps> = ({
       onCaseAnalyzed(caseId, report);
     } catch (err: any) {
       console.error("Forensic analysis failed:", err);
+      const target = getApiBase() || "backend service";
       setErrorMessage(
-        err.message || "Forensic analysis failed. Verify backend service is running on http://127.0.0.1:8000."
+        err.message || `Forensic analysis failed. Verify backend service is running on ${target}.`
       );
     } finally {
       setIsProcessing(false);

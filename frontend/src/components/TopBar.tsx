@@ -130,7 +130,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           />
           <span className="text-gray-400 group-hover:text-gray-200">
             {backendOnline === true
-              ? "FastAPI 8000"
+              ? "FastAPI Online"
               : backendOnline === false
               ? "API Offline"
               : "Connecting..."}
