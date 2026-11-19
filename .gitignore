@@ -1,0 +1,49 @@
+# Virtual environment
+backend/venv/
+venv/
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Pytest
+.pytest_cache/
+
+# SQLite database
+backend/truthlens.db
+backend/truthlens.db-journal
+
+# Models cache & large binaries
+backend/models/hf_cache/
+*.pth
+
+# Temporary storage (preserve gitkeep if needed)
+backend/storage/originals/*
+!backend/storage/originals/.gitkeep
+backend/storage/artifacts/*
+!backend/storage/artifacts/.gitkeep
+backend/storage/reports/*
+!backend/storage/reports/.gitkeep
+
+# Environment secrets
+.env.*
+**/.env
+**/.env.*
+!.env.example
+
+# Frontend dependencies
+node_modules/
+**/node_modules/
+
+# Python virtual environments
+.venv/
+**/.venv/
+
+# macOS
+.DS_Store
+
+# Local agent workspace data
+.kilo/agents/data.md

@@ -1,0 +1,26 @@
+{
+  "status": "custom_trained",
+  "model": "EfficientNet-B0 (TruthLens Custom)",
+  "dataset": "JamieWithofs/Deepfake-and-real-images (Balanced + Random JPEG Aug)",
+  "train_samples": 8000,
+  "val_samples": 2000,
+  "classes": [
+    "fake",
+    "real"
+  ],
+  "fake_class_index": 0,
+  "temperature_T": 1.0126,
+  "val_accuracy": 0.907,
+  "f1_score": 0.9048,
+  "roc_auc": 0.9688,
+  "confusion_matrix": [
+    [
+      930,
+      70
+    ],
+    [
+      116,
+      884
+    ]
+  ]
+}
