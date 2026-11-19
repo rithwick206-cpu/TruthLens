@@ -11,15 +11,25 @@ import {
 export function getApiBase(): string {
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
+    // Local development
     if (host === "localhost" || host === "127.0.0.1") {
       return "http://127.0.0.1:8000";
     }
+
+    // Clean up any stale localStorage key if present
+    try {
+      localStorage.removeItem("truthlens_api_url");
+    } catch {}
   }
 
-  const rawEnv = (process.env.NEXT_PUBLIC_API_BASE_URL || "").trim().replace(/\/$/, "");
-  if (rawEnv) {
+  let rawEnv = (process.env.NEXT_PUBLIC_API_BASE_URL || "").trim().replace(/\/$/, "");
+  if (rawEnv && rawEnv !== "http://127.0.0.1:8000" && rawEnv !== "http://localhost:8000") {
+    // If Render injected bare service name without FQDN (e.g. "truthlens-api-nflc")
+    if (!rawEnv.includes(".")) {
+      rawEnv = `${rawEnv}.onrender.com`;
+    }
     if (!rawEnv.startsWith("http://") && !rawEnv.startsWith("https://")) {
-      return `https://${rawEnv}`;
+      rawEnv = `https://${rawEnv}`;
     }
     return rawEnv;
   }

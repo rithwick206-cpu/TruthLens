@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
       "https://truthlens-api-nflc.onrender.com";
 
     let backend = rawBackend.trim().replace(/\/$/, "");
+    if (!backend.includes(".") && backend !== "localhost") {
+      backend = `${backend}.onrender.com`;
+    }
     if (!backend.startsWith("http://") && !backend.startsWith("https://")) {
       backend = `https://${backend}`;
     }

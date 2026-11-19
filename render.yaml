@@ -30,7 +30,4 @@ services:
     autoDeploy: true
     envVars:
       - key: NEXT_PUBLIC_API_BASE_URL
-        fromService:
-          type: web
-          name: truthlens-api
-          property: host
+        value: https://truthlens-api-nflc.onrender.com
