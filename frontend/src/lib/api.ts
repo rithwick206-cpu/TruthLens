@@ -28,9 +28,12 @@ export function getApiBase(): string {
     return rawEnv;
   }
 
-  // When deployed on cloud (e.g. Render, Vercel), use same-origin Next.js rewrites proxy by default
+  // When deployed on cloud (e.g. Render), default directly to the deployed Render backend
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
+    if (host.includes("onrender.com")) {
+      return "https://truthlens-api-nflc.onrender.com";
+    }
     if (host !== "localhost" && host !== "127.0.0.1") {
       return "";
     }

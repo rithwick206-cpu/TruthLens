@@ -38,15 +38,21 @@ export const ApiConfigModal: React.FC<ApiConfigModalProps> = ({
       return;
     }
 
-    // Auto-complete scheme and Render domain if user entered just the service name
+    // Auto-complete scheme if missing
     if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
-      if (cleanUrl.includes("render.com") || cleanUrl.includes("trycloudflare.com")) {
-        cleanUrl = `https://${cleanUrl}`;
-      } else if (!cleanUrl.includes(".")) {
-        // e.g. user typed "truthlens-api-nflc"
-        cleanUrl = `https://${cleanUrl}.onrender.com`;
-      } else {
-        cleanUrl = `https://${cleanUrl}`;
+      cleanUrl = `https://${cleanUrl}`;
+    }
+
+    // Auto-complete domain if missing .onrender.com or TLD
+    try {
+      const parsed = new URL(cleanUrl);
+      if (!parsed.hostname.includes(".")) {
+        // e.g. "https://truthlens-api-nflc" -> "https://truthlens-api-nflc.onrender.com"
+        cleanUrl = `${parsed.protocol}//${parsed.hostname}.onrender.com`;
+      }
+    } catch {
+      if (!cleanUrl.includes(".")) {
+        cleanUrl = `${cleanUrl}.onrender.com`;
       }
     }
     setApiUrl(cleanUrl);
