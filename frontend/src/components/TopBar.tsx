@@ -12,7 +12,6 @@ interface TopBarProps {
   isLoadingDemo: boolean;
   activeCaseId: string | null;
   onOpenPalette?: () => void;
-  onOpenConfig?: () => void;
 }
 
 const DEMO_CONFIG: Record<
@@ -63,7 +62,6 @@ export const TopBar: React.FC<TopBarProps> = ({
   isLoadingDemo,
   activeCaseId,
   onOpenPalette,
-  onOpenConfig,
 }) => {
   const [backendOnline, setBackendOnline] = useState<boolean | null>(null);
   const [demoSamples, setDemoSamples] = useState<DemoSample[]>([]);
@@ -112,12 +110,9 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
         </div>
 
-        {/* Backend Status Dot (Clickable) */}
-        <button
-          type="button"
-          onClick={onOpenConfig}
-          className="hidden sm:flex items-center gap-1.5 ml-3 pl-3 border-l border-gray-800 text-[11px] font-mono hover:text-white transition-colors cursor-pointer group"
-          title="Click to configure Backend API endpoint"
+        {/* Backend Status Dot */}
+        <div
+          className="hidden sm:flex items-center gap-1.5 ml-3 pl-3 border-l border-gray-800 text-[11px] font-mono"
         >
           <span
             className={`w-2 h-2 rounded-full ${
@@ -128,14 +123,14 @@ export const TopBar: React.FC<TopBarProps> = ({
                 : "bg-amber-400 animate-pulse"
             }`}
           />
-          <span className="text-gray-400 group-hover:text-gray-200">
+          <span className="text-gray-400">
             {backendOnline === true
               ? "FastAPI Online"
               : backendOnline === false
               ? "API Offline"
               : "Connecting..."}
           </span>
-        </button>
+        </div>
       </div>
 
       {/* Navigation Switcher */}

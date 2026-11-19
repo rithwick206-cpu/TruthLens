@@ -10,16 +10,9 @@ import {
 
 export function getApiBase(): string {
   if (typeof window !== "undefined") {
-    const override = localStorage.getItem("truthlens_api_url");
-    if (override && override.trim()) {
-      let clean = override.trim().replace(/\/$/, "");
-      if (!clean.includes(".") && clean !== "localhost") {
-        clean = `${clean}.onrender.com`;
-      }
-      if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
-        clean = `https://${clean}`;
-      }
-      return clean;
+    const host = window.location.hostname;
+    if (host === "localhost" || host === "127.0.0.1") {
+      return "http://127.0.0.1:8000";
     }
   }
 
@@ -31,28 +24,12 @@ export function getApiBase(): string {
     return rawEnv;
   }
 
-  // When deployed on cloud (e.g. Render), default directly to the deployed Render backend
-  if (typeof window !== "undefined") {
-    const host = window.location.hostname;
-    if (host.includes("onrender.com")) {
-      return "https://truthlens-api-nflc.onrender.com";
-    }
-    if (host !== "localhost" && host !== "127.0.0.1") {
-      return "";
-    }
-  }
-
-  return "http://127.0.0.1:8000";
+  // Deployed Cloud Backend on Render
+  return "https://truthlens-api-nflc.onrender.com";
 }
 
 export function setApiBase(url: string): void {
-  if (typeof window !== "undefined") {
-    if (url && url.trim()) {
-      localStorage.setItem("truthlens_api_url", url.trim().replace(/\/$/, ""));
-    } else {
-      localStorage.removeItem("truthlens_api_url");
-    }
-  }
+  // No-op in automated mode
 }
 
 export function assetUrl(relativePath?: string | null): string {

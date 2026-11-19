@@ -9,10 +9,9 @@ import { ForensicWorkbench } from "@/components/workbench/ForensicWorkbench";
 import { ModelInsightsModal } from "@/components/ModelInsightsModal";
 import { CaseRecord, ForensicReport } from "@/types/forensics";
 import { listCases, getCase, loadDemoSample, getReportPdfUrl, getApiBase } from "@/lib/api";
-import { FolderArchive, PlusCircle, AlertCircle } from "lucide-react";
+import { FolderArchive, PlusCircle, AlertCircle, RefreshCw } from "lucide-react";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ToastProvider } from "@/components/Toast";
-import { ApiConfigModal } from "@/components/ApiConfigModal";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"new" | "active" | "insights">("new");
@@ -24,7 +23,6 @@ export default function Home() {
   const [loadingActiveCase, setLoadingActiveCase] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
-  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
 
   // Global Keyboard Shortcuts (⌘K, N, M, 1-3, E)
   useEffect(() => {
@@ -189,7 +187,6 @@ export default function Home() {
           isLoadingDemo={isLoadingDemo}
           activeCaseId={activeCaseId}
           onOpenPalette={() => setIsPaletteOpen(true)}
-          onOpenConfig={() => setIsConfigModalOpen(true)}
         />
 
         {/* Global Error Banner */}
@@ -202,10 +199,11 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setIsConfigModalOpen(true)}
-                className="px-2.5 py-1 bg-rose-900/80 hover:bg-rose-800 text-rose-200 border border-rose-600/60 rounded font-mono text-[11px] font-semibold transition-colors cursor-pointer"
+                onClick={refreshCases}
+                className="inline-flex items-center gap-1 px-2.5 py-1 bg-rose-900/80 hover:bg-rose-800 text-rose-200 border border-rose-600/60 rounded font-mono text-[11px] font-semibold transition-colors cursor-pointer"
               >
-                Configure Backend URL
+                <RefreshCw className="w-3 h-3" />
+                <span>Retry</span>
               </button>
               <button
                 type="button"
@@ -303,13 +301,6 @@ export default function Home() {
           onLoadDemo={handleLoadDemo}
           onExportPdf={() => activeCaseId && window.open(getReportPdfUrl(activeCaseId), "_blank")}
           activeCaseId={activeCaseId}
-        />
-
-        {/* Backend API Configuration Modal */}
-        <ApiConfigModal
-          isOpen={isConfigModalOpen}
-          onClose={() => setIsConfigModalOpen(false)}
-          onEndpointChanged={refreshCases}
         />
       </div>
     </ToastProvider>
