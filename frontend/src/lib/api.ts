@@ -13,6 +13,9 @@ export function getApiBase(): string {
     const override = localStorage.getItem("truthlens_api_url");
     if (override && override.trim()) {
       let clean = override.trim().replace(/\/$/, "");
+      if (!clean.includes(".") && clean !== "localhost") {
+        clean = `${clean}.onrender.com`;
+      }
       if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
         clean = `https://${clean}`;
       }
