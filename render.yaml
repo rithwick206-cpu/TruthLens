@@ -1,0 +1,36 @@
+services:
+  # ==============================================================
+  # TruthLens Backend API (FastAPI + PyTorch + OpenCV Forensics)
+  # ==============================================================
+  - type: web
+    name: truthlens-api
+    runtime: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+
+  # ==============================================================
+  # TruthLens Frontend (Next.js 16 + React 19 + Tailwind CSS)
+  # ==============================================================
+  - type: web
+    name: truthlens-web
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    autoDeploy: true
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE_URL
+        fromService:
+          type: web
+          name: truthlens-api
+          property: host
