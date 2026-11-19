@@ -8,9 +8,27 @@ import {
   ReviewUpdateResponse,
 } from "@/types/forensics";
 
-const API_BASE = (
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000"
-).replace(/\/$/, "");
+export function getApiBase(): string {
+  if (typeof window !== "undefined") {
+    const override = localStorage.getItem("truthlens_api_url");
+    if (override && override.trim()) {
+      return override.trim().replace(/\/$/, "");
+    }
+  }
+  return (
+    process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000"
+  ).replace(/\/$/, "");
+}
+
+export function setApiBase(url: string): void {
+  if (typeof window !== "undefined") {
+    if (url && url.trim()) {
+      localStorage.setItem("truthlens_api_url", url.trim().replace(/\/$/, ""));
+    } else {
+      localStorage.removeItem("truthlens_api_url");
+    }
+  }
+}
 
 export function assetUrl(relativePath?: string | null): string {
   if (!relativePath) return "";
@@ -18,15 +36,16 @@ export function assetUrl(relativePath?: string | null): string {
     return relativePath;
   }
   const cleanPath = relativePath.startsWith("/") ? relativePath : `/${relativePath}`;
-  return `${API_BASE}${cleanPath}`;
+  return `${getApiBase()}${cleanPath}`;
 }
 
 export function getReportPdfUrl(caseId: string): string {
-  return `${API_BASE}/api/report/${caseId}/pdf`;
+  return `${getApiBase()}/api/report/${caseId}/pdf`;
 }
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const url = `${API_BASE}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+  const base = getApiBase();
+  const url = `${base}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
   try {
     const response = await fetch(url, {
@@ -72,7 +91,7 @@ export async function getCase(caseId: string): Promise<CaseRecord> {
 }
 
 export async function ingestCase(formData: FormData): Promise<CaseIngestResponse> {
-  const url = `${API_BASE}/api/cases/ingest`;
+  const url = `${getApiBase()}/api/cases/ingest`;
   try {
     const response = await fetch(url, {
       method: "POST",
